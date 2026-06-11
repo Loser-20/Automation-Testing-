@@ -2,14 +2,23 @@ name: Hourly Time Writer
 
 on:
   schedule:
-    - cron: '*/5 * * * *'  # Runs every hour
-  workflow_dispatch:     # Manual trigger
+    - cron: '*/5 * * * *'   # every 5 minutes (for testing)
+  push:
+    branches:
+      - main               # runs on every push
+  workflow_dispatch:       # manual trigger
 
 jobs:
   run-script:
     runs-on: ubuntu-latest
 
+    permissions:
+      contents: write
+
     steps:
+      - name: Debug trigger
+        run: echo "Workflow triggered at $(date)"
+
       - name: Checkout repo
         uses: actions/checkout@v4
 
@@ -18,7 +27,7 @@ jobs:
         with:
           python-version: '3.10'
 
-      - name: Run script
+      - name: Run Python script
         run: python write_time.py
 
       - name: Commit changes
@@ -26,5 +35,5 @@ jobs:
           git config user.name "github-actions"
           git config user.email "actions@github.com"
           git add output.txt start_time.txt
-          git commit -m "Update time log" || echo "No changes"
+          git commit -m "Auto update time log" || echo "No changes"
           git push

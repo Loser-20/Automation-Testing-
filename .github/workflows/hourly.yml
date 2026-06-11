@@ -2,8 +2,7 @@ name: Hourly Time Writer
 
 on:
   schedule:
-    - cron: '*/5 * * * *'
-  # Runs every hour (UTC)
+    - cron: '*/5 * * * *' # Runs every hour (UTC)
   workflow_dispatch:
 
 jobs:
